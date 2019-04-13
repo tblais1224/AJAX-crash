@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>AJAX 1 - Text File</title>
+    <link rel="shortcut icon" type="image/png" href="https://img.icons8.com/clouds/384/cloud-network.png" />
 </head>
 
 <body>
     <button id="button">Get Text File</button>
+    <br><br>
+    <div id="text"></div>
 
     <script>
         //create event listener
@@ -20,13 +23,34 @@
             var xhr = new XMLHttpRequest();
             //OPEN - type, url/file, async
             xhr.open('GET', 'sample.txt', true);
+            console.log('ReadyState: ', xhr.readyState)
 
-            xhr.onload = function () {
-                if (this.status == 200) {
-                    console.log(this.responseText);
-                }
+            xhr.onprogress = function () {
+                console.log('ReadyState: ', xhr.readyState)
+
             }
 
+            xhr.onload = function () {
+                console.log('ReadyState: ', xhr.readyState)
+
+                if (this.status == 200) {
+                    console.log(this.responseText);
+                    document.getElementById('text').innerHTML = this.responseText;
+                }else if(this.status = 404){
+                    document.getElementById('text').innerHTML = 'Not Found';
+                }
+            }
+//onreadystatechange and onload are same but onload only runs if readystate is 4
+            // xhr.onreadystatechange = function () {
+            //     console.log('ReadyState: ', xhr.readyState)
+
+            //     if (this.readyState == 4 && this.status == 200) {
+            //         console.log(this.responseText)
+            //     }
+            // }
+                xhr.onerror = function () {
+                    console.log('Request Error...')
+                }
             //sends request
             xhr.send();
         }
